@@ -23,11 +23,13 @@ export default function LogIn({ handleResponseSuccess, openModalFunc, handleAcce
             alert("이메일과 비밀번호를 모두 입력하세요")
         }
         else {
-            axios.post("https://localhost:4000/login",
+            axios.post("http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/login",
             {email, password},
             {"content-type": "application/json", withCredentials: true}
             )
+
             .then((res) => {
+              
                console.log('toooooooooookkkkken',res.data.data)
                openModalFunc()
               handleAccessToken(res.data.data.accessToken) // 토큰 넣어줌 
@@ -35,6 +37,8 @@ export default function LogIn({ handleResponseSuccess, openModalFunc, handleAcce
               alert("로그인이 완료되었습니다")
               history.push('/')
               
+            }).catch(err=>{
+              alert('잘못된 아이디이거나,비밀번호 입니다.')
             })
         }
     }

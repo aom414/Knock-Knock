@@ -19,7 +19,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import './location.css'
 import { Link } from "react-router-dom";
-const Location=({openModalFunc3})=>{
+const Location=({isLogin,openModalFunc3})=>{
     const [searchAdress, setsearchAdress] = useState({
         adress : ''
     })
@@ -34,7 +34,15 @@ const Location=({openModalFunc3})=>{
     };
     const resetSearch=()=>{
         setsearch('')
+
     }
+    const handleKeyUp=(e)=> {
+      if(e.key === "Enter") {
+        console.log("e : ", e)
+        return searchClick()
+      }
+    }
+
   useEffect(()=>{
     console.log('effect안의 search는',!search)
     let container = document.getElementById('map');
@@ -69,7 +77,7 @@ const Location=({openModalFunc3})=>{
 
             var config = {
               method: 'get',
-              url: `https://localhost:4000/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
+              url: `http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
               headers: { }
             };
             
@@ -80,6 +88,9 @@ const Location=({openModalFunc3})=>{
                   for(let i = 0 ; i < res.data.length; i++){
                     // accessible_toilet_female: false
                     // accessible_toilet_male: false
+                    let imageSrc = 'https://i.ibb.co/HGPJwqQ/Kakao-Talk-Photo-2021-10-14-14-05-31.png'
+                    let toImageSize = new kakao.maps.Size(30, 40)
+                    let markerImage = new kakao.maps.MarkerImage(imageSrc, toImageSize)
                       if(res.data[i].accessible_toilet_male===true || res.data[i].accessible_toilet_female === true){
                           console.log('장장애인화장실표시가있을까요?애',res.data[i])
                         var toMarkerPosition  = new kakao.maps.LatLng(res.data[i].locationY, res.data[i].locationX)
@@ -87,7 +98,8 @@ const Location=({openModalFunc3})=>{
                         var toMarker = new kakao.maps.Marker({
                         map: map,
                         position: toMarkerPosition,
-                        title:res.data[i].name
+                        title:res.data[i].name,
+                        image: markerImage
                     });
             
                     // 마커가 지도 위에 표시되도록 설정합니다
@@ -120,7 +132,7 @@ const Location=({openModalFunc3})=>{
         //         console.log('범위는???',bounds)
         //     axios
         //     .get(
-        //     'https://localhost:4000/toilet'
+        //     'http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/toilet'
         //      ).then((res)=>{
         //          console.log(res)
         //      })
@@ -135,7 +147,7 @@ const Location=({openModalFunc3})=>{
 
             var config = {
               method: 'get',
-              url: `https://localhost:4000/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
+              url: `http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
               headers: { }
             };
             
@@ -200,7 +212,7 @@ const Location=({openModalFunc3})=>{
 
             var config = {
               method: 'get',
-              url: `https://localhost:4000/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
+              url: `http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
               headers: { }
             };
             
@@ -243,8 +255,8 @@ const Location=({openModalFunc3})=>{
     
     // 지도에 마커와 인포윈도우를 표시하는 함수입니다
     function displayMarker(locPosition, message) {
-        let imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다    
-        imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
+        let imageSrc = 'https://i.ibb.co/hHP5tF2/Kakao-Talk-Photo-2021-10-14-14-51-13.png', // 마커이미지의 주소입니다    
+        imageSize = new kakao.maps.Size(56, 65), // 마커이미지의 크기입니다
         imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
           
     // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
@@ -273,7 +285,7 @@ const Location=({openModalFunc3})=>{
         // 지도 중심좌표를 접속위치로 변경합니다
         map.setCenter(locPosition);      
     }  
-     function displayToiletMarker(toLocPosition, toiletInfo){
+     function displayToiletMarker(toLocPosition, toiletInfo){  ///요기기ㅣ기기기기기
         let toImageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다    
         toImageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
         toImageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
@@ -292,13 +304,15 @@ const Location=({openModalFunc3})=>{
     return (
         <div className='mapdiv'>
             <div className='searchBox'>
-             <input className='search' onChange={handleSearchValue('adress')}></input>
+             <input className='search' onChange={handleSearchValue('adress')} onKeyUp={handleKeyUp}></input>
              <button onClick={searchClick}>검색</button>
+             {isLogin? 
              <div>
              
              <button onClick={openModalFunc3}>화장실 추가하기</button> 
              
-             </div>
+             </div>:
+              null}
              </div>
              <div className='backCurLoc'>
              <button onClick={resetSearch}>현재위치</button>    

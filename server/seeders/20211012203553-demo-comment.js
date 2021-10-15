@@ -1,16 +1,19 @@
-'use strict';
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+    await queryInterface.bulkInsert('comments', [{
+      user_id: 1,
+      comment: "깨끗하고 좋아요",
+      toilet_id: 1,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      user_id: 1,
+      comment: "더러워 뒤지는줄",
+      toilet_id: 10,
+      createdAt: new Date(),
+      updatedAt: new Date()
+  }]);
   },
 
   down: async (queryInterface, Sequelize) => {

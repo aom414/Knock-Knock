@@ -6,35 +6,35 @@ const jwt = require('jsonwebtoken');
 module.exports = async (req, res) => {
 
     const userInfo = await db.user.findOne({
-        where: { email: req.body.email, password: req.body.password }
-       })
+      where: { email: req.body.email, password: req.body.password }
+    })
 
     if(!userInfo) {
-        res.status(401).json({ data:null, message:"invalid email or password"})
+      res.status(404).json({ message:"invalid email or password" })
     } else {
 
     const payload = {
-    id : userInfo.dataValues.id,
-    name : userInfo.dataValues.name,
-    email : userInfo.dataValues.email,
-    password : userInfo.dataValues.password
+      id : userInfo.dataValues.id,
+      name : userInfo.dataValues.name,
+      email : userInfo.dataValues.email,
+      password : userInfo.dataValues.password
     }
 
     const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "15m"})
-    const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, { expiresIn: "1h"})
+    // const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, { expiresIn: "1h"})
 
-    res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none"
-    })
+    // res.cookie("refreshToken", refreshToken, {
+    //   httpOnly: true,
+    //   secure: true,
+    //   sameSite: "none"
+    // })
 
     res.status(200).json({
-    data: {payload:payload,accessToken: accessToken},
-    message: "ok"
+      data: {
+        payload:payload,
+        accessToken: accessToken
+    },
+      message: "Information passed"
     })
-}
-
-//res.status(500).json({ "message": "Sorry, there was an error on the server" })
-
+  }
 }

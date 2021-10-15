@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
 
   jwt.verify(authorization,process.env.ACCESS_SECRET , async function(err,decoded){
     if(err) {
-      res.send("만료됬거나 유효하지 않은 토큰 입니다")
+      res.status(401).json({ message:"not authorized"} )
     } else {
       
       const tokenData = { 
@@ -17,27 +17,27 @@ module.exports = async (req, res) => {
         name:decoded.name,
         password:decoded.password
       }
-
+  
       const userData = await db.user.findOne({
         where: tokenData
       })
-
       if(!userData) {
-        res.send("잘못된 정보 토큰 입니다")
+        res.status(404).json({ message:"invalid user"})
       } else {
         
         const myComment = await db.comment.findAll({
-          where: { user_id: tokenData.id }
+          where: { user_id: Number(tokenData.id) }
         })
 
         const myToilet = await db.toilet.findAll({
-          where: { user_id: tokenData.id }
+          where: { user_id: Number(tokenData.id) }
         })
 
-        res.json({
-          myComment: myComment,
+        res.status(200).json({
+          myComment:myComment,
           myToilet: myToilet,
-          message: "ok"
+
+          message: "Information passed" 
         })
       }
     }

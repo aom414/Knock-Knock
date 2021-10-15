@@ -4,7 +4,7 @@
     width: 10%;
 }
 .ModalContainer1 {
-    border: 1px solid red;
+
     height: 30%;
     width: 10%;
     
@@ -17,18 +17,21 @@
     position: absolute;
     top: 10%;
     right: 0%;
+    background-image: #807c7c;
+    /* #807c7c */ 
 }
 .tablist{
     border: 1px solid red;
     text-align: center;
     height: 50%;
     width: 100%;
+    cursor: pointer;
 }
 
 .ModalContaine1{
     border: 1px solid red;
     float: left;
 }
-.headerdiv{
+/* .headerdiv{
     margin: 1%;
-}
+} */

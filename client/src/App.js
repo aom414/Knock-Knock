@@ -10,8 +10,9 @@ import MyList from './pages/MyList'
 import Location from './component/location'
 import AddToilet from './pages/addToilet'
 import {BrowserRouter, Route, Switch, useHistory, Link} from "react-router-dom"
+import _ from 'lodash';
 // import * as React from 'react';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 //import {FaRestroom} from "react-icons/fa"
 
 axios.defaults.withCredentials = true;
@@ -20,9 +21,35 @@ function App() {
 
   const [isLogin, setIsLogin] = useState(false);
   const [userinfo, setUserinfo] = useState(null);
-  const [writeMyComment, setWriteMyComment] = useState(null);
-  const [writeMyToilet, setWriteMyToilet] = useState(null);
+  const [isMyList, setIsMyList] = useState(null);
+  const [myList, setMyList] = useState([]);
   const [accessToken, setAccessToken] = useState(null);
+
+
+  const deleteAccount = ()=> {
+  axios.delete("http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/user/userinfo", {
+    headers: {
+      authorization: `${accessToken}`,
+      "Content-Type" : "application/json"
+    }
+  }).then(res=>{
+      if(res.data.message === "Membership withdrawal has been completed"){
+          //토큰비우고 
+          //로그인정보도비우고
+          //alert
+          //window.push
+          setUserinfo(null)
+          setAccessToken(null)
+          setIsLogin(false)
+          setMyList([])
+          window.location.replace('/') 
+          alert("회원탈퇴되었습니다")
+      }
+      else{
+        alert("잘못된 접근입니다")
+      }
+  })
+  }
 
   const handleUserinfo = (accessP) =>{
     setUserinfo(accessP)
@@ -33,25 +60,29 @@ function App() {
   const handleAccessToken = (accessT) => {
     console.log('accccccceessstyttttttttt',accessT)
     setAccessToken(accessT) // 로그인하면서 받은 엑세스 토큰
-    
   }
+  //console.log("==============================isMyList(latest)", isMyList)
   
-  const handleWriteInfo = (accessT) => {
-    axios.get("https://localhost:4000/user/mylist", {
-      headers: {
-        authorization: `${accessToken}`,
-        "Content-Type" : "application/json"
-      }
-    }) // myComment, myToilet 데이터 요청
-    .then((res) => {
-      setWriteMyComment(res.myComment)
-      setWriteMyToilet(res.myToilet)
-    })
-  }
-
+  const handleWriteInfo = () => {
+    
+      axios.get("http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/user/mylist", {
+        headers: {
+          authorization: `${accessToken}`,
+          "Content-Type" : "application/json"
+        }
+      }) // myComment, myToilet 데이터 요청
+      //[{.....},{......}]
+      .then((res) => {
+        console.log("===================mylist: ", _.cloneDeep(res.data.myToilet))
+      
+        setMyList(myList=>[...myList,...res.data.myToilet])
+        console.log("===================mylist: ", myList)
+      })
+      console.log("===================mylist: ", myList)
+    }
+    
   const isAuthenticated = () => {
-    //https://localhost:4000/user/userinfo
-    axios.get("https://localhost:4000/user/userinfo", {
+    axios.get("http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/user/userinfo", {
       headers: {
         authorization: `${accessToken}`,
         "Content-Type" : "application/json"   
@@ -65,14 +96,16 @@ function App() {
       console.log("========================useinfostates: ", userinfo)
     })
   }
-  
 
   const handleLogout = () => {
-    axios.post("https://localhost:4000/signout")
+    axios.post("http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/signout")
     .then((res) => {
+      console.log("===================mylist: ", myList)
       setIsLogin(false);
       setUserinfo(null);
-      history.push('/')
+      window.location.replace('/') 
+      alert("로그아웃을 완료했습니다")
+      
     })
   }
 
@@ -95,6 +128,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [isModalOpen3, setIsModalOpen3] = useState(false);
+
   const openModalFunc = () => {
     setIsModalOpen(!isModalOpen);
   }
@@ -111,12 +145,15 @@ function App() {
     <div className="headerdiv">
       <header className="header" >
       <Link to="/">
-        <h1 className="App-name" ><img className="Knock_logo1" src="https://i.ibb.co/XLgjjZ8/Knock-Knock-logo.png" alt="My Image"/></h1>
+        <h1 className="App-name" ><img className="Knock_logo1" src="https://i.ibb.co/PW20S0t/Knock-Knock-logo-removebg-preview.png" alt="My Image"/></h1>
         </Link>
+      
+
         {isLogin ===false ? 
         <Tabmodal openModalFunc={openModalFunc} openModalFunc2={openModalFunc2}/> :
-         <Tabmodal2/>}
+         <Tabmodal2 handleLogout={handleLogout}/>}
          {/* <Tabmodal openModalFunc={openModalFunc} openModalFunc2={openModalFunc2}/> */}
+
        </header>
        {isModalOpen === false ? null :
      <LogIn handleResponseSuccess={handleResponseSuccess} openModalFunc={openModalFunc} handleAccessToken={handleAccessToken} isAuthenticated={isAuthenticated} handleUserinfo={handleUserinfo}/>
@@ -131,25 +168,29 @@ function App() {
     
     <Switch>
     <div className='map'>
+
+
      {/* <Location openModalFunc3={openModalFunc3}/> */}
      {/* <SignUp/>  */}
-     {/* <Location/> */}
-     <Route path='/mypage'  >
-       <MyPage handleLogout={handleLogout} userinfo={userinfo} handleWriteInfo={handleWriteInfo} />
+     {/* {<Location/>} */}
+     <Route exact path='/'  >
+       <Location openModalFunc3={openModalFunc3} isLogin={isLogin}/>
+     </Route> 
+     <Route exact path='/mypage'  >
+       <MyPage handleLogout={handleLogout} userinfo={userinfo} handleWriteInfo={handleWriteInfo} accessToken={accessToken} handleWriteInfo={handleWriteInfo} deleteAccount={deleteAccount} />
      </Route>
-     <Route path='/mylist' >
-       <MyList writeMyComment={writeMyComment} accessToken={accessToken} />
+     <Route exact path='/mylist' >
+       <MyList accessToken={accessToken} handleWriteInfo={handleWriteInfo} myList={myList}/>
      </Route>
-    
-
+     {/* <Route path='/mylist'>
+       <MyList isMyList={isMyList} />
+     </Route> */}
     </div>
     </Switch>
   </div>  
   </BrowserRouter>
   
- 
   );
-  
 }
 
 export default App;

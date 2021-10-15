@@ -21,12 +21,13 @@ export default function SignUp({openModalFunc2}){
 console.log(userinfo)
  const validSignup = () =>{ //여기서 콜백 넘기는이유가
     if(userinfo.email ==='' || userinfo.password ==='' || userinfo.username ==='' || userinfo.confirmpassword ==='' ){
-        setErrorMessage('모든 항목은 필수입니다')
-
+        
+        alert("모든 항목은 필수입니다")
         console.log('첫번째 if문')
       }
       else if(userinfo.password !== userinfo.confirmpassword) {
-        setErrorMessage('비밀번호가 일치하지 않습니다') 
+       
+        alert("비밀번호가 일치하지 않습니다")
         console.log('두번째 if문')
 
       }
@@ -34,7 +35,7 @@ console.log(userinfo)
       else{
         axios
         .post(
-          'https://localhost:4000/signup',{
+          'http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/signup',{
             name:userinfo.username, email:userinfo.email, password:userinfo.password
           }
          ,
@@ -44,12 +45,14 @@ console.log(userinfo)
         }
         }
         ).then((res)=>{
-               console.log('res',res)
-         // settoiletinfo(toiletinfo) 
-         history.push('/')    
-           })
-        
-        //console.log(toiletinfo)
+          console.log("res.data.message : ", res.data.message)
+          window.location.replace('/')
+          alert("회원가입이 완료 되었습니다.")  
+        })
+        .catch((err) => {       
+          console.log("err : ", err)
+          alert("이미 가입된 이메일 입니다.")
+        })
       }
       }
  
