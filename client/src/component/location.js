@@ -77,7 +77,7 @@ const Location=({isLogin,openModalFunc3})=>{
 
             var config = {
               method: 'get',
-              url: `https://localhost:4000/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
+              url: `http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
               headers: { }
             };
             
@@ -132,7 +132,7 @@ const Location=({isLogin,openModalFunc3})=>{
         //         console.log('범위는???',bounds)
         //     axios
         //     .get(
-        //     'https://localhost:4000/toilet'
+        //     'http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/toilet'
         //      ).then((res)=>{
         //          console.log(res)
         //      })
@@ -147,7 +147,7 @@ const Location=({isLogin,openModalFunc3})=>{
 
             var config = {
               method: 'get',
-              url: `https://localhost:4000/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
+              url: `http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
               headers: { }
             };
             
@@ -212,7 +212,7 @@ const Location=({isLogin,openModalFunc3})=>{
 
             var config = {
               method: 'get',
-              url: `https://localhost:4000/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
+              url: `http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/toilet?boudaryX=${latlng.ha}-${latlng.oa}.80&boudaryY=${latlng.qa}-${latlng.pa}`,
               headers: { }
             };
             

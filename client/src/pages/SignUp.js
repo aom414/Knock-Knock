@@ -35,7 +35,7 @@ console.log(userinfo)
       else{
         axios
         .post(
-          'https://localhost:4000/signup',{
+          'http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/signup',{
             name:userinfo.username, email:userinfo.email, password:userinfo.password
           }
          ,

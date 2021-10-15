@@ -26,7 +26,7 @@ export default function AddToilet({ openModalFunc3,accessToken }) {
          else{
             axios
             .post(
-              'https://localhost:4000/toilet',{
+              'http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/toilet',{
                 name:toiletinfo.name, address:toiletinfo.address,
               },
               {

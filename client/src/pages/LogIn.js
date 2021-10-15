@@ -23,7 +23,7 @@ export default function LogIn({ handleResponseSuccess, openModalFunc, handleAcce
             alert("이메일과 비밀번호를 모두 입력하세요")
         }
         else {
-            axios.post("https://localhost:4000/login",
+            axios.post("http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/login",
             {email, password},
             {"content-type": "application/json", withCredentials: true}
             )

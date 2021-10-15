@@ -27,7 +27,7 @@ function App() {
 
 
   const deleteAccount = ()=> {
-  axios.delete("https://localhost:4000/user/userinfo", {
+  axios.delete("http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/user/userinfo", {
     headers: {
       authorization: `${accessToken}`,
       "Content-Type" : "application/json"
@@ -65,7 +65,7 @@ function App() {
   
   const handleWriteInfo = () => {
     
-      axios.get("https://localhost:4000/user/mylist", {
+      axios.get("http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/user/mylist", {
         headers: {
           authorization: `${accessToken}`,
           "Content-Type" : "application/json"
@@ -82,7 +82,7 @@ function App() {
     }
     
   const isAuthenticated = () => {
-    axios.get("https://localhost:4000/user/userinfo", {
+    axios.get("http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/user/userinfo", {
       headers: {
         authorization: `${accessToken}`,
         "Content-Type" : "application/json"   
@@ -98,7 +98,7 @@ function App() {
   }
 
   const handleLogout = () => {
-    axios.post("https://localhost:4000/signout")
+    axios.post("http://ec2-54-180-141-64.ap-northeast-2.compute.amazonaws.com/signout")
     .then((res) => {
       console.log("===================mylist: ", myList)
       setIsLogin(false);
